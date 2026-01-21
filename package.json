@@ -1,18 +1,18 @@
 {
-  "name": "aws-azure-login",
+  "name": "@pixida/pixida-aws-azure-login",
   "version": "3.6.5",
   "description": "Use Azure AD SSO to log into the AWS CLI.",
   "main": "index.js",
   "author": {
-    "name": "aws-azure-login devs",
-    "url": "https://github.com/aws-azure-login"
+    "name": "pixida-aws-azure-login dev",
+    "url": "https://github.com/Pixida/pixida-aws-azure-login"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/aws-azure-login/aws-azure-login.git"
+    "url": "https://github.com/Pixida/pixida-aws-azure-login.git"
   },
-  "bugs": "https://github.com/aws-azure-loginc/aws-azure-login/issues",
+  "bugs": "https://github.com/Pixida/pixida-aws-azure-login/issues",
   "engines": {
     "node": ">=12.0"
   },
