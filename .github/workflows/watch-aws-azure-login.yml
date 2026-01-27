@@ -47,7 +47,7 @@ jobs:
           username: ${{ secrets.EMAIL_USER }}
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: "📦 aws-azure-login released ${{ steps.upstream.outputs.tag }}"
-          to: c74219a5.pixida.com@emea.teams.ms
+          to: aws-azure-login-development@pixida.com
           from: "Upstream Watch Bot <alerts@pixida.com>"
           body: |
             A new version of aws-azure-login has been released.
