@@ -1,0 +1,66 @@
+name: Watch aws-azure-login upstream versions
+
+on:
+  schedule:
+    - cron: "0 * * * *"   # every hour
+  workflow_dispatch:
+
+jobs:
+  watch-upstream:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Configure bot identity
+        run: |
+          git config user.name "Upstream Watch Bot"
+          git config user.email "devops-bot@pixida.com"
+
+      - name: Add upstream repo
+        run: |
+          git remote add upstream https://github.com/aws-azure-login/aws-azure-login.git || true
+          git fetch upstream --tags
+
+      - name: Get latest upstream tag
+        id: upstream
+        run: |
+          LATEST_TAG=$(git tag --sort=-creatordate | head -n 1)
+          echo "tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+
+      - name: Read last notified version
+        id: last
+        run: |
+          if [ -f .upstream-version ]; then
+            echo "last=$(cat .upstream-version)" >> $GITHUB_OUTPUT
+          else
+            echo "last=none" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Send email to Teams
+        if: steps.upstream.outputs.tag != steps.last.outputs.last
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.office365.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USER }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "📦 aws-azure-login released ${{ steps.upstream.outputs.tag }}"
+          to: c74219a5.pixida.com@emea.teams.ms
+          from: "Upstream Watch Bot <alerts@pixida.com>"
+          body: |
+            A new version of aws-azure-login has been released.
+
+            Version: ${{ steps.upstream.outputs.tag }}
+            Repository: https://github.com/aws-azure-login/aws-azure-login
+
+            Please review the changes and decide whether to sync.
+
+      - name: Record notified version
+        if: steps.upstream.outputs.tag != steps.last.outputs.last
+        run: |
+          echo "${{ steps.upstream.outputs.tag }}" > .upstream-version
+          git add .upstream-version
+          git commit -m "chore: record upstream version ${{ steps.upstream.outputs.tag }}"
+          git push
