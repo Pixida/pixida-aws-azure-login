@@ -51,7 +51,7 @@ jobs:
       - name: Publish to Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
-          name: aws-azure-login/aws-azure-login
+          name: pixida-aws-azure-login/pixida-aws-azure-login
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           snapshot: true
